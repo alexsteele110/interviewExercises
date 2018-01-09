@@ -34,6 +34,10 @@ class LinkedList {
   }
 
   getLast() {
+    if (!this.head) {
+      return null;
+    }
+
     let node = this.head;
 
     while (node.next) {
@@ -80,6 +84,70 @@ class LinkedList {
       last.next = new Node(data);
     } else {
       this.head = new Node(data);
+    }
+  }
+
+  getAt(index) {
+    let node = this.head;
+    let counter = 0;
+
+    while (node) {
+      if (counter === index) {
+        return node;
+      }
+
+      counter++;
+      node = node.next;
+    }
+    return null;
+  }
+
+  removeAt(index) {
+    if (!this.head) {
+      return null;
+    }
+
+    if (index === 0) {
+      return this.removeFirst();
+    }
+
+    const previousNode = this.getAt(index - 1);
+    if (!previousNode || !previousNode.next) {
+      return;
+    }
+    previousNode.next = previousNode.next.next;
+  }
+
+  insertAt(data, index) {
+    if (!this.head || index === 0) {
+      return this.insertFirst(data);
+    }
+
+    const previousNode = this.getAt(index - 1);
+
+    if (!previousNode) {
+      return this.insertLast(data);
+    }
+    previousNode.next = new Node(data, previousNode.next);
+  }
+
+  forEach(fn) {
+    let node = this.head;
+    let counter = 0;
+
+    while (node) {
+      fn(node, counter);
+      node = node.next;
+      counter++;
+    }
+  }
+
+  *[Symbol.iterator]() {
+    let node = this.head;
+
+    while (node) {
+      yield node;
+      node = node.next;
     }
   }
 }
